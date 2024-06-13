@@ -1,0 +1,34 @@
+<ui:component xmlns:ui="jakarta.faces.facelets"
+              xmlns:cc="jakarta.faces.composite"
+              xmlns:p="http://primefaces.org/ui"
+              xmlns:h="jakarta.faces.html"
+              xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <cc:interface>
+        <cc:attribute name="goto_disponibili" required="true" />
+        <cc:attribute name="goto_prenotati" required="true" />
+        <cc:attribute name="goto_completati" required="true" />
+        <cc:attribute name="logout" required="true"/>
+        <cc:attribute name="mat" required="true"/>
+    </cc:interface>
+
+    <cc:implementation>
+        <h:head>
+            <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.css"/>
+            <h:outputStylesheet library="webjars" name="primeflex/3.3.1/themes/primeone-light.css"/>
+            <h:outputStylesheet name="primefaces/core.js"/>
+            <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
+        </h:head>
+
+        <p:menubar style="min-width: auto" >
+            <p:menuitem value="Disponibili" icon="pi pi-home" action="#{cc.attrs.goto_disponibili}"/>
+            <p:menuitem value="Prenotati" icon="pi pi-bookmark" action="#{cc.attrs.goto_prenotati}"/>
+            <p:menuitem value="Completati" icon="pi pi-check-circle" action="#{cc.attrs.goto_completati}"/>
+            <f:facet name="end">
+                <div class="ui-input-icon-left mr-2">
+                    <p:outputLabel value="Benvenuto, #{cc.attrs.mat}"/>
+                </div>
+                <p:commandButton value="Logout" icon="pi pi-fw pi-sign-out" styleClass="ui-button-info" action="#{cc.attrs.logout}"/>
+            </f:facet>
+        </p:menubar>
+    </cc:implementation>
+</ui:component>

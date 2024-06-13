@@ -1,0 +1,47 @@
+<ui:component xmlns:ui="jakarta.faces.facelets"
+              xmlns:cc="jakarta.faces.composite"
+              xmlns:p="http://primefaces.org/ui"
+              xmlns:h="jakarta.faces.html">
+   <cc:interface>
+      <cc:attribute name="nome" required="true" />
+      <cc:attribute name="cdl" required="true" />
+      <cc:attribute name="data" required="true" />
+      <cc:attribute name="ndomande" required="true"/>
+      <cc:attribute name="time" required="true"/>
+      <cc:attribute name="button_action" required="true" />
+      <cc:attribute name="button_label" required="true" />
+   </cc:interface>
+
+   <cc:implementation>
+      <h:head>
+         <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.css"/>
+         <h:outputStylesheet library="webjars" name="primeflex/3.3.1/themes/primeone-light.css"/>
+         <h:outputStylesheet name="primefaces/core.js"/>
+         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
+      </h:head>
+      <h:body>
+         <!-- Panel that can be expanded or collapsed -->
+         <p:panel id="card" header="#{cc.attrs.nome}" toggleable="true" collapsed="true" style="max-width: fit-content; min-width: 600px; max-height: fit-content">
+            <div class="flex flex-row justify-content-around  flex-wrap" style="min-width: inherit" >
+               <div class="flex align-items-center flex-wrap">
+                  <p:outputLabel id="cdl" value="#{cc.attrs.cdl}"/>
+               </div>
+               <div class="flex align-items-center flex-wrap">
+                  <p:outputLabel id="domande" value="#{cc.attrs.ndomande} domande"/>
+               </div>
+
+               <div class="flex align-items-center flex-wrap">
+                  <p:outputLabel id="date" value="#{cc.attrs.data}"/>
+               </div>
+               <div class="flex align-items-center flex-wrap">
+                  <i class="fa fa-clock-o"/>
+                  <p:outputLabel id="time" value="#{cc.attrs.time} min"/>
+               </div>
+               <div class="flex align-items-center flex-wrap">
+                  <p:commandButton value="#{cc.attrs.button_label}" action="#{cc.attrs.button_action}" icon="fa fa-calendar-o"/>
+               </div>
+            </div>
+         </p:panel>
+      </h:body>
+   </cc:implementation>
+</ui:component>
