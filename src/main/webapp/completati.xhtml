@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="jakarta.faces.core"
+      xmlns:jsf="jakarta.faces"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:my="jakarta.faces.composite/customcomponents">
+
+<f:view>
+    <f:metadata>
+        <f:viewAction action="#{loginChecker.checkLogin}" />
+    </f:metadata>
+    <h:head>
+        <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.css"/>
+        <h:outputStylesheet library="webjars" name="primeflex/3.3.1/themes/primeone-light.css"/>
+        <h:outputStylesheet name="primefaces/core.js"/>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
+    </h:head>
+    <my:topBanner goto_disponibili="#{navigator.goto_disponibili()}" goto_prenotati="#{navigator.goto_prenotati()}" mat="#{studenteSession.mat}" logout="#{clientMethods.logout()}" goto_completati="#{navigator.goto_completati()}"/>
+    <div class="flex flex-column justify-content-around mx-8 py-5" style="width: 60rem; max-width: inherit">
+        <div class="font-medium text-3xl text-900 fa-border" style="font-family: 'Open Sans',serif">Appelli completati</div>
+        <p:dataList value="#{hello.ls}" var="appello" type="definition">
+            <div class="py-2">
+                <my:appello time="#{appello.durata_minuti}"
+                            nome="#{appello.nome}"
+                            button_label="Prenota"
+                            data="#{clientMethods.formatDate(appello.data_ora)}"
+                            cdl="#{appello.codcorso}"
+                            button_action=""
+                            ndomande="#{appello.domande.size()}"/>
+            </div>
+        </p:dataList>
+    </div>
+</f:view>
+</html>

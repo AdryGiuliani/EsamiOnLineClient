@@ -7,11 +7,12 @@
         <cc:attribute name="goto_disponibili" required="true" />
         <cc:attribute name="goto_prenotati" required="true" />
         <cc:attribute name="goto_completati" required="true" />
-        <cc:attribute name="logout" required="true"/>
+        <cc:attribute name="logout"  required="true"/>
         <cc:attribute name="mat" required="true"/>
     </cc:interface>
 
     <cc:implementation>
+        <f:view>
         <h:head>
             <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.css"/>
             <h:outputStylesheet library="webjars" name="primeflex/3.3.1/themes/primeone-light.css"/>
@@ -20,15 +21,18 @@
         </h:head>
 
         <p:menubar style="min-width: auto" >
-            <p:menuitem value="Disponibili" icon="pi pi-home" action="#{cc.attrs.goto_disponibili}"/>
-            <p:menuitem value="Prenotati" icon="pi pi-bookmark" action="#{cc.attrs.goto_prenotati}"/>
-            <p:menuitem value="Completati" icon="pi pi-check-circle" action="#{cc.attrs.goto_completati}"/>
+            <p:menuitem ajax="false" value="Disponibili" icon="pi pi-home" url="#{cc.attrs.goto_disponibili}"/>
+            <p:menuitem ajax="false" value="Prenotati" icon="pi pi-bookmark" url="#{cc.attrs.goto_prenotati}"/>
+            <p:menuitem value="Completati" icon="pi pi-check-circle" url="#{cc.attrs.goto_completati}"/>
             <f:facet name="end">
                 <div class="ui-input-icon-left mr-2">
-                    <p:outputLabel value="Benvenuto, #{cc.attrs.mat}"/>
+                    <p:outputLabel value="Benvenuto, MAT. #{cc.attrs.mat}"/>
                 </div>
-                <p:commandButton value="Logout" icon="pi pi-fw pi-sign-out" styleClass="ui-button-info" action="#{cc.attrs.logout}"/>
+                <h:form>
+                    <p:commandButton value="Logout" icon="pi pi-fw pi-sign-out" action="#{cc.attrs.logout}"/>
+                </h:form>
             </f:facet>
         </p:menubar>
+        </f:view>
     </cc:implementation>
 </ui:component>

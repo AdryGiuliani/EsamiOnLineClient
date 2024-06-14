@@ -5,12 +5,8 @@ import application.persistance.pojos.Risultato;
 import application.persistance.pojos.Student;
 import com.ingsw.esamionline.esamionlineclient.grpcClient.ClientMethods;
 import gen.javaproto.CompletedAppello;
-import gen.javaproto.Credentials;
 import jakarta.enterprise.context.SessionScoped;
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
-import org.primefaces.PrimeFaces;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,6 +24,8 @@ public class StudenteSession implements Serializable {
     private int requestStatus=0;
     private Exception exception = null;
     private ClientMethods reqDispatcher = new ClientMethods();
+
+
 
     public ClientMethods getReqDispatcher() {
         return reqDispatcher;
@@ -106,28 +104,6 @@ public class StudenteSession implements Serializable {
         this.idAppello = idAppello;
     }
 
-    public String login(){
-        if (!checkInserimento()) {
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Validation", "Both fields are required!");
-            PrimeFaces.current().dialog().showMessageDynamic(message);
-            return ClientMethods.FAILURE;
-        }
-        reqDispatcher.setSession(this);
-        String status = reqDispatcher.login();
-        if (!status.equals(ClientMethods.SUCCESS)){
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Credenziali non valide", this.exception.getMessage());
-            PrimeFaces.current().dialog().showMessageDynamic(message);
-        }
-        return status;
-    }
 
-    public boolean checkInserimento() {
-        // Logic to handle form submission
-        return !(mat == null || mat.isEmpty() || cf == null || cf.isEmpty());
-//       else {
-//            // Proceed with form submission logic
-//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Form submitted successfully!");
-//            PrimeFaces.current().dialog().showMessageDynamic(message);
-//        }
-    }
+
 }

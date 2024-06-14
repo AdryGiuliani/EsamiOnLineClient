@@ -21,23 +21,23 @@
       </h:head>
       <h:body>
          <!-- Panel that can be expanded or collapsed -->
-         <p:panel id="card" header="#{cc.attrs.nome}" toggleable="true" collapsed="true" style="max-width: fit-content; min-width: 600px; max-height: fit-content">
+         <p:panel id="card" header="#{cc.attrs.nome}" toggleable="true" collapsed="true" style="min-width: initial; max-height: fit-content" >
             <div class="flex flex-row justify-content-around  flex-wrap" style="min-width: inherit" >
-               <div class="flex align-items-center flex-wrap">
+               <div class="flex align-items-center flex-wrap mx-5">
                   <p:outputLabel id="cdl" value="#{cc.attrs.cdl}"/>
                </div>
-               <div class="flex align-items-center flex-wrap">
+               <div class="flex align-items-center flex-wrap mx-5">
                   <p:outputLabel id="domande" value="#{cc.attrs.ndomande} domande"/>
                </div>
 
-               <div class="flex align-items-center flex-wrap">
+               <div class="flex align-items-center flex-wrap mx-5">
                   <p:outputLabel id="date" value="#{cc.attrs.data}"/>
                </div>
-               <div class="flex align-items-center flex-wrap">
+               <div class="flex align-items-center flex-wrap mx-5">
                   <i class="fa fa-clock-o"/>
                   <p:outputLabel id="time" value="#{cc.attrs.time} min"/>
                </div>
-               <div class="flex align-items-center flex-wrap">
+               <div class="flex align-items-center flex-wrap mx-5">
                   <p:commandButton value="#{cc.attrs.button_label}" action="#{cc.attrs.button_action}" icon="fa fa-calendar-o"/>
                </div>
             </div>
