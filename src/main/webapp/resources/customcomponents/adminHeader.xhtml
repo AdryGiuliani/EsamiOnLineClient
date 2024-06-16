@@ -1,0 +1,35 @@
+<ui:component xmlns:ui="jakarta.faces.facelets"
+              xmlns:cc="jakarta.faces.composite"
+              xmlns:p="http://primefaces.org/ui"
+              xmlns:h="jakarta.faces.html"
+              xmlns:f="http://xmlns.jcp.org/jsf/core">
+   <cc:interface>
+      <cc:attribute name="impostazioni_action" method-signature="java.lang.String action()" required="true" />
+      <cc:attribute name="logout" method-signature="java.lang.String action()" required="true"/>
+      <cc:attribute name="username" required="true"/>
+   </cc:interface>
+
+   <cc:implementation>
+      <f:view>
+         <h:head>
+            <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.css"/>
+            <h:outputStylesheet library="webjars" name="primeflex/3.3.1/themes/primeone-light.css"/>
+            <h:outputStylesheet name="primefaces/core.js"/>
+            <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
+         </h:head>
+         <h:form>
+            <p:menubar style="min-width: auto" styleClass="justify-content-center">
+               <f:facet name="start">
+                     <p:outputLabel value="Benvenuto, utente: #{cc.attrs.username}"/>
+               </f:facet>
+               <f:facet name="end">
+                  <div class="ui-input-icon-left mr-2">
+                     <p:commandButton icon="pi pi-cog" style="background-color: darkgray; border: black" action="#{cc.attrs.impostazioni_action}"/>
+                  </div>
+                  <p:commandButton value="Logout" icon="pi pi-fw pi-sign-out" action="#{cc.attrs.logout}"/>
+               </f:facet>
+            </p:menubar>
+         </h:form>
+      </f:view>
+   </cc:implementation>
+</ui:component>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+xmlns:p="http://primefaces.org/ui"
+xmlns:my="jakarta.faces.composite/customcomponents">
+<f:view>
+    <f:metadata>
+        <f:viewAction action="#{loginChecker.admincheckLogin}" />
+    </f:metadata>
+    <h:head>
+        <title>EsamiOn-Line</title>
+        <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.css"/>
+        <h:outputStylesheet library="webjars" name="primeflex/3.3.1/themes/primeone-light.css"/>
+        <h:outputStylesheet name="primefaces/core.js"/>
+    </h:head>
+    <my:adminHeader username="#{adminSession.username}" logout="#{adminMethods.logout()}" impostazioni_action="#{adminMethods.opzioniDialog()}"/>
+    <h:form>
+        <div class="flex flex-column justify-content-around mx-8 py-5" style="max-width: 60rem; min-width: 52rem">
+
+            <div class="font-medium text-3xl text-900 fa-border flex-row flex justify-content-between" style="font-family: 'Open Sans',serif">
+                <label class="mx-3">Appelli del sistema</label>
+                <p:commandButton icon="pi pi-plus"  value="New" styleClass="rounded-button" action="#{adminMethods.addAppello()}"/>
+            </div>
+            <p:dataList id="all_appelli" value="#{adminSession.allAppellos}" var="appello" type="definition">
+                <div class="py-2">
+                    <my:adminAppello action_results="#{adminMethods.risultati(appello)}" data="#{clientMethods.formatDate(appello.data_ora)}" cdl="#{appello.codcorso}" action_modify="#{adminMethods.modify(appello)}" action_info="#{adminMethods.info(appello)}" action_remove="#{adminMethods.deleteDialog(appello)}" nome="#{appello.nome}"/>
+                </div>
+            </p:dataList>
+        </div>
+    </h:form>
+</f:view>
+</html>

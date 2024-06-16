@@ -1,7 +1,6 @@
-package com.ingsw.esamionline.esamionlineclient.grpcClient;
+package com.ingsw.esamionline.esamionlineclient.commons;
 
 import application.services.MyAuthInterceptor;
-import application.services.UserServices;
 import gen.javaproto.Credentials;
 import io.grpc.CallCredentials;
 import io.grpc.Metadata;

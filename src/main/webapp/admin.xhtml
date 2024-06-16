@@ -25,19 +25,17 @@
             </div>
             <div>
                 <h:form id="loginform">
-                <label for="mat" class="block font-medium text-900 mb-2" style="font-family: 'Open Sans',serif">Matricola</label>
-                <p:inputText maxlength="20" id="mat" styleClass="w-full mb-3" placeholder="inserisci matricola" value="#{studenteSession.mat}">
-                    <f:ajax event="change"/>
-                </p:inputText>
-                <label for="cf" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">Codice fiscale</label>
-                <p:inputText maxlength="20" id="cf" styleClass="w-full mb-3" placeholder="inserisci codice fiscale" value="#{studenteSession.cf}">
-                    <f:ajax event="change"/>
-                </p:inputText>
+                    <label for="mat" class="block font-medium text-900 mb-2" style="font-family: 'Open Sans',serif">Username</label>
+                    <p:inputText maxlength="20" id="mat" styleClass="w-full mb-3" placeholder="username" value="#{adminSession.username}">
+                        <f:ajax event="change"/>
+                    </p:inputText>
+                    <label for="cf" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">Password</label>
+                    <p:inputText type="password" maxlength="20" id="cf" styleClass="w-full mb-3" placeholder="password" value="#{adminSession.password}">
+                        <f:ajax event="change"/>
+                    </p:inputText>
                     <br/>
-                    <p:commandButton icon="pi pi-user" action="#{clientMethods.login()}" value="Accedi">
+                    <p:commandButton disableOnAjax="false" icon="pi pi-user" action="#{adminMethods.login}" value="Accedi">
                     </p:commandButton>
-                <h:outputLabel id="outStatus" value="#{studenteSession.requestStatus}"/>
-                <h:outputLabel id="outMat" value="#{studenteSession.mat}" />
                 </h:form>
             </div>
         </div>

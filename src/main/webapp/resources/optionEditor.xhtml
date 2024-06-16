@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="jakarta.faces.core"
+      xmlns:jsf="jakarta.faces"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:my="jakarta.faces.composite/customcomponents">
+
+<f:view>
+    <h:head>
+        <title>EsamiOn-Line</title>
+        <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.css"/>
+        <h:outputStylesheet library="webjars" name="primeflex/3.3.1/themes/primeone-light.css"/>
+        <h:outputStylesheet name="primefaces/core.js"/>
+    </h:head>
+    <h:form id="optionform">
+        <label for="admin_usr" class="block font-medium text-900 mb-2" style="font-family: 'Open Sans',serif">Username</label>
+        <p:inputText maxlength="20" id="admin_usr" styleClass="w-full mb-3" placeholder="username" value="#{adminSession.opzioni.admin_usrn}">
+            <f:ajax event="change"/>
+        </p:inputText>
+        <label for="pwd" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">Password</label>
+        <p:inputText maxlength="20" id="pwd" styleClass="w-full mb-3" placeholder="password" value="#{adminSession.opzioni.admin_pwd}">
+            <f:ajax event="change"/>
+        </p:inputText>
+        <label for="deadline" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">Deadline entro quale potersi prenotare (ore)</label>
+        <p:inputText  maxlength="2" id="deadline" styleClass="w-full mb-3" placeholder="deadline (h)" value="#{adminSession.deadline_h}">
+            <f:ajax event="change"/>
+        </p:inputText>
+        <label for="minvoto" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">Voto minimo da considerare per il superamento</label>
+        <p:inputText maxlength="20" id="minvoto" styleClass="w-full mb-3" placeholder="minvoto" value="#{adminSession.opzioni.minVoto}">
+            <f:ajax event="change"/>
+        </p:inputText>
+    <br/>
+    <div class="flex flex-row justify-content-end">
+        <p:commandButton icon="pi pi-save" action="#{adminMethods.saveOptions()}" value="Salva">
+            <f:ajax render="@all" process="@all" />
+        </p:commandButton>
+    </div>
+    </h:form>
+</f:view>
+</html>

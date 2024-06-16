@@ -1,0 +1,56 @@
+<ui:component xmlns:ui="jakarta.faces.facelets"
+              xmlns:cc="jakarta.faces.composite"
+              xmlns:p="http://primefaces.org/ui"
+              xmlns:h="jakarta.faces.html"
+              xmlns:f="http://xmlns.jcp.org/jsf/core"
+              xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <cc:interface>
+        <cc:attribute name="domande" required="true" />
+    </cc:interface>
+
+    <cc:implementation>
+        <f:view>
+            <h:head>
+                <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.css"/>
+                <h:outputStylesheet library="webjars" name="primeflex/3.3.1/themes/primeone-light.css"/>
+                <h:outputStylesheet name="primefaces/core.js"/>
+                <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
+            </h:head>
+            <h:form>
+                <label for="domlist" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">Domande appello</label>
+                <p:dataList id="domlist" value="#{cc.attrs.domande}" var="dom" type="ordered">
+                        <p:commandButton icon="pi pi-times" styleClass="rounded-button" style="background-color: lightcoral; border: black;" action="#{cc.attrs.domande.remove(dom)}">
+                            <f:ajax event="click" render="@form risplist domlist" process="@form risplist domlist"/>
+                        </p:commandButton>
+                    <p:inputTextarea id="testo" styleClass="w-full mb-3" placeholder="testo della domanda" value="#{dom.text}">
+                        <f:ajax event="change"/>
+                    </p:inputTextarea>
+                    <p:dataList id="risplist" value="#{dom.risposte}" var="ris" type="ordered">
+                        <div class="flex flex-row justify-content-between">
+                            <div>
+                                <p:inputTextarea id="risposta" styleClass="w-full mb-3" placeholder="testo della risposta" value="#{ris.text}">
+                                    <f:ajax event="change"/>
+                                </p:inputTextarea>
+                            </div>
+                            <div>
+                                <label class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">corretta:</label>
+                                <p:selectBooleanCheckbox itemLabel="Corretta" value="#{ris.corretta}">
+                                    <f:ajax event="change"/>
+                                </p:selectBooleanCheckbox>
+                                <p:commandButton icon="pi pi-trash" action="#{dom.risposte.remove(ris)}">
+                                    <f:ajax event="click" render="@form risplist domlist" process="@form risplist domlist" />
+                                </p:commandButton>
+                            </div>
+                        </div>
+                    </p:dataList>
+                    <p:commandButton value="Aggiungi risposta" icon="pi pi-plus" action="#{adminMethods.addRisposta(dom)}">
+                        <f:ajax event="click" render="@form risplist domlist" process="@form risplist domlist" />
+                    </p:commandButton>
+                </p:dataList>
+                <p:commandButton value="Aggiungi domanda" icon="pi pi-plus" action="#{adminMethods.addDomanda()}">
+                    <f:ajax event="click" render="@form risplist domlist" process="@form risplist domlist"/>
+                </p:commandButton>
+            </h:form>
+        </f:view>
+    </cc:implementation>
+</ui:component>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="jakarta.faces.core"
+      xmlns:jsf="jakarta.faces"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:my="jakarta.faces.composite/customcomponents">
+
+<f:view>
+    <h:head>
+        <title>EsamiOn-Line</title>
+        <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.css"/>
+        <h:outputStylesheet library="webjars" name="primeflex/3.3.1/themes/primeone-light.css"/>
+        <h:outputStylesheet name="primefaces/core.js"/>
+    </h:head>
+        <h:form id="appelloform">
+            <label for="nome" class="block font-medium text-900 mb-2" style="font-family: 'Open Sans',serif">Nome</label>
+            <p:inputText maxlength="20" id="nome" styleClass="w-full mb-3" placeholder="username" value="#{adminSession.selectedAppello.nome}">
+                <f:ajax event="change"/>
+            </p:inputText>
+            <label for="codcorso" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">CdL</label>
+            <p:inputText maxlength="20" id="codcorso" styleClass="w-full mb-3" placeholder="password" value="#{adminSession.selectedAppello.codcorso}">
+                <f:ajax event="change"/>
+            </p:inputText>
+            <label for="durata" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">Durata</label>
+            <p:inputText  maxlength="20" id="durata" styleClass="w-full mb-3" placeholder="password" value="#{adminSession.selectedAppello.durata_minuti}">
+                <f:ajax event="change"/>
+            </p:inputText>
+            <label for="tempodomanda" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">Tempo a domanda (in secondi)</label>
+            <p:inputText maxlength="20" id="tempodomanda" styleClass="w-full mb-3" placeholder="password" value="#{adminSession.selectedAppello.tempo_domanda_sec}">
+                <f:ajax event="change"/>
+            </p:inputText>
+            <label for="data" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">Data esame</label>
+            <p:datePicker id="data" value="#{adminSession.selectedAppello.data_ora}" showTime="true" locale="it" pattern="dd.MM.yyyy">
+                <f:ajax event="change"/>
+            </p:datePicker>
+        </h:form>
+    <my:vista_editing_domande domande="#{adminSession.selectedAppello.domande}"/>
+    <br/>
+    <div class="flex flex-row justify-content-end">
+        <p:commandButton icon="pi pi-save" action="#{adminMethods.salva()}" value="Salva">
+            <f:ajax render="@all" process="@all" />
+        </p:commandButton>
+    </div>
+
+</f:view>
+</html>

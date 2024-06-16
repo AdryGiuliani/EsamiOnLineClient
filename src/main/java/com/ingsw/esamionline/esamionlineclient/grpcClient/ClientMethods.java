@@ -1,29 +1,24 @@
 package com.ingsw.esamionline.esamionlineclient.grpcClient;
 
 import application.services.CapsuleDtoAssembler;
-import application.validation.chainsteps.Capsule;
 import application.validation.chainsteps.CapsuleValidate;
 import com.ingsw.esamionline.esamionlineclient.StudenteSession;
+import com.ingsw.esamionline.esamionlineclient.commons.AuthCredentials;
+import com.ingsw.esamionline.esamionlineclient.commons.Navigator;
+import com.ingsw.esamionline.esamionlineclient.commons.ClientRequester;
 import com.ingsw.esamionline.esamionlineclient.util.Formatter;
-import gen.javaproto.ClientGRPC;
 import gen.javaproto.Credentials;
 import gen.javaproto.Dto;
-import gen.javaproto.FrontendServicesGrpc;
-import io.grpc.*;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jdk.jshell.spi.ExecutionControl;
 import org.primefaces.PrimeFaces;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.*;
+
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 
 @Named
@@ -35,7 +30,9 @@ public class ClientMethods implements Serializable {
     @Inject
     private Navigator navigator;
 
-    private static final Requester requester = Requester.getInstance();
+    @Inject
+    private ClientRequester requester;
+
     private AuthCredentials credentials;
 
     public String formatDate(Date date) {
@@ -44,7 +41,7 @@ public class ClientMethods implements Serializable {
 
     public String login(){
         if (!checkInserimento()) {
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Validation", "Both fields are required!");
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Login", "Inserisci username e password!");
             PrimeFaces.current().dialog().showMessageDynamic(message);
             return navigator.passlogin(false);
         }

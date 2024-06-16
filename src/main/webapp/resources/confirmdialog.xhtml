@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:my="jakarta.faces.composite/customcomponents"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+<f:view>
+    <h:head>
+        <title>Sei sicuro?</title>
+        <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.css"/>
+        <h:outputStylesheet library="webjars" name="primeflex/3.3.1/themes/primeone-light.css"/>
+        <h:outputStylesheet name="primefaces/core.js"/>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
+    </h:head>
+    <p:outputLabel value="L'appello seguente verrà eliminato: #{adminSession.selectedAppello.nome}"/>
+    <h:form>
+        <div class="flex flex-row justify-content-center">
+            <p:commandButton value="Elimina" icon="pi pi-trash" style="background-color: darkred; border-color: black" action="#{adminMethods.delete()}"/>
+        </div>
+    </h:form>
+</f:view>
+</html>

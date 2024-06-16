@@ -1,6 +1,5 @@
-package com.ingsw.esamionline.esamionlineclient.grpcClient;
+package com.ingsw.esamionline.esamionlineclient.commons;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -13,4 +12,8 @@ public class LoginChecker {
     public Object checkLogin() {
         return navigator.checkLogin();
     }
+    public Object admincheckLogin() {
+        return navigator.checkLoginAdmin();
+    }
+
 }

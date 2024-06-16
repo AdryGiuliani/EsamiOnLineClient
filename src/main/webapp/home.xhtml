@@ -19,20 +19,17 @@
         <h:outputStylesheet name="primefaces/core.js"/>
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
     </h:head>
-    <h:form>
-        <p:commandButton value="Logout" icon="pi pi-sign-out" action="#{clientMethods.logout()}"/>
-    </h:form>
     <my:topBanner goto_disponibili="#{navigator.goto_disponibili()}" goto_prenotati="#{navigator.goto_prenotati()}" mat="#{studenteSession.mat}"  goto_completati="#{navigator.goto_completati()}" logout="#{clientMethods.logout()}"/>
-    <div class="flex flex-column justify-content-around mx-8 py-5" style="width: 60rem; max-width: inherit">
+    <div class="flex flex-column justify-content-around mx-8 py-5" style="max-width: 60rem; min-width: 52rem">
         <div class="font-medium text-3xl text-900 fa-border" style="font-family: 'Open Sans',serif">Appelli disponibili per la prenotazione</div>
-        <p:dataList value="#{hello.ls}" var="appello" type="definition">
+        <p:dataList value="#{studenteSession.disponibili}" var="appello" type="definition">
             <div class="py-2">
                 <my:appello time="#{appello.durata_minuti}"
                             nome="#{appello.nome}"
                             button_label="Prenota"
                             data="#{clientMethods.formatDate(appello.data_ora)}"
                             cdl="#{appello.codcorso}"
-                            button_action=""
+                            button_action="#{adminMethods.saluto()}"
                             ndomande="#{appello.domande.size()}"/>
             </div>
         </p:dataList>
