@@ -29,8 +29,8 @@
                             button_label="Prenota"
                             data="#{clientMethods.formatDate(appello.data_ora)}"
                             cdl="#{appello.codcorso}"
-                            button_action="#{adminMethods.saluto()}"
-                            ndomande="#{appello.domande.size()}"/>
+                            button_active="#{clientMethods.deadlineCheck(appello.data_ora)}"
+                            button_action="#{clientMethods.prenota(appello)}"/>
             </div>
         </p:dataList>
     </div>

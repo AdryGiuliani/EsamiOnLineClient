@@ -1,0 +1,45 @@
+<ui:component xmlns:ui="jakarta.faces.facelets"
+              xmlns:cc="jakarta.faces.composite"
+              xmlns:p="http://primefaces.org/ui"
+              xmlns:h="jakarta.faces.html">
+   <cc:interface>
+      <cc:attribute name="nome" required="true" />
+      <cc:attribute name="data" required="true" />
+      <cc:attribute name="button1_action" method-signature="java.lang.String action()" required="true" />
+      <cc:attribute name="button1_label" required="true" />
+      <cc:attribute name="button2_action" method-signature="java.lang.String action()" required="true" />
+      <cc:attribute name="button2_label" required="true" />
+      <cc:attribute name="button1_active" required="true" />
+      <cc:attribute name="button2_active" required="true" />
+
+   </cc:interface>
+
+   <cc:implementation>
+      <h:head>
+         <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.css"/>
+         <h:outputStylesheet library="webjars" name="primeflex/3.3.1/themes/primeone-light.css"/>
+         <h:outputStylesheet name="primefaces/core.js"/>
+         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
+      </h:head>
+      <h:body>
+         <!-- Panel that can be expanded or collapsed -->
+         <p:card>
+            <div class="flex flex-row justify-content-between align-content-center flex-wrap" style="min-width: inherit" >
+               <div class="flex align-items-center flex-wrap mx-5">
+                  <p:outputLabel id="name" value="#{cc.attrs.nome}"/>
+               </div>
+               <div class="flex align-items-center flex-wrap mx-5">
+                  <p:outputLabel id="dataora" value="#{cc.attrs.data}"/>
+               </div>
+               <div>
+                  <div class="flex align-items-center flex-row mx-5">
+                     <p:commandButton disabled="#{!cc.attrs.button1_active}" value="#{cc.attrs.button1_label}" action="#{cc.attrs.button1_action}" icon="pi pi-pen-to-square"/>
+                     <p:spacer width="20"/>
+                     <p:commandButton disabled="#{!cc.attrs.button2_active}" value="#{cc.attrs.button2_label}" action="#{cc.attrs.button2_action}" icon="pi pi-trash"/>
+                  </div>
+               </div>
+            </div>
+         </p:card>
+      </h:body>
+   </cc:implementation>
+</ui:component>

@@ -23,6 +23,7 @@ import jakarta.inject.Named;
 import jakarta.servlet.http.HttpSession;
 import org.checkerframework.checker.units.qual.A;
 import org.primefaces.PrimeFaces;
+import org.primefaces.context.PrimeFacesContext;
 import org.primefaces.model.DialogFrameworkOptions;
 
 import java.io.Serializable;
@@ -149,10 +150,11 @@ public class AdminMethods implements Serializable {
                 .modal(true)
                 .fitViewport(true)
                 .responsive(true)
+                .width("450px")
                 .contentWidth("100%")
                 .resizeObserver(true)
                 .resizeObserverCenter(true)
-                .resizable(false)
+                .resizable(true)
                 .styleClass("max-w-screen")
                 .iframeStyleClass("max-w-screen")
                 .build();
@@ -170,10 +172,11 @@ public class AdminMethods implements Serializable {
                 .modal(true)
                 .fitViewport(true)
                 .responsive(true)
+                .width("900px")
                 .contentWidth("100%")
                 .resizeObserver(true)
                 .resizeObserverCenter(true)
-                .resizable(false)
+                .resizable(true)
                 .styleClass("max-w-screen")
                 .iframeStyleClass("max-w-screen")
                 .build();
@@ -250,10 +253,9 @@ public class AdminMethods implements Serializable {
                 );
     }
 
-    public String saluto(){
+    public void saluto(){
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Message", " Always Bet on Prime!");
         PrimeFaces.current().dialog().showMessageDynamic(message);
-        return FacesContext.getCurrentInstance().getViewRoot().getViewId();
     }
 
     public boolean isCorretta(Risposta r){

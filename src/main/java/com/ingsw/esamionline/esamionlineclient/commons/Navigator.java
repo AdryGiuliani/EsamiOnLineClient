@@ -18,9 +18,10 @@ public class Navigator implements Serializable {
     private static final String DISPONIBILI = "home"+"?faces-redirect=true";
     private static final String PRENOTATI = "prenotazioni"+"?faces-redirect=true";
     private static final String COMPLETATI = "completati"+"?faces-redirect=true";
-    private static final String APPELLO = "appello";
+    private static final String ESAME = "esame"+"?faces-redirect=true";
 
     private boolean userLoggedIn = false;
+    private boolean adminLoggedIn = false;
 
     private String currentPage = LOGIN;
 
@@ -51,11 +52,11 @@ public class Navigator implements Serializable {
         return FacesContext.getCurrentInstance().getViewRoot().getViewId();
     }
 
-    public String goto_appello(){
+    public String goto_esame(){
         if (!userLoggedIn) return LOGIN;
-        if (!currentPage.equals(APPELLO)){
-            currentPage=APPELLO;
-            return APPELLO;
+        if (!currentPage.equals(ESAME)){
+            currentPage= ESAME;
+            return ESAME;
         }
         return FacesContext.getCurrentInstance().getViewRoot().getViewId();
     }
@@ -68,7 +69,7 @@ public class Navigator implements Serializable {
     }
     public String passloginAdmin(boolean passed) {
         if (!passed) return FacesContext.getCurrentInstance().getViewRoot().getViewId();
-        userLoggedIn=true;
+        adminLoggedIn=true;
         currentPage=HOME_ADMIN;
         return HOME_ADMIN;
     }
@@ -77,7 +78,7 @@ public class Navigator implements Serializable {
         return LOGIN;
     }
     public String logoutAdmin(){
-        userLoggedIn=false;
+        adminLoggedIn=false;
         return LOGIN_ADMIN;
     }
     public String checkLogin(){
@@ -85,9 +86,10 @@ public class Navigator implements Serializable {
         return FacesContext.getCurrentInstance().getViewRoot().getViewId();
     }
     public String checkLoginAdmin(){
-        if (!userLoggedIn) return LOGIN_ADMIN;
+        if (!adminLoggedIn) return LOGIN_ADMIN;
         return FacesContext.getCurrentInstance().getViewRoot().getViewId();
     }
+
 
 
     private String curView(){

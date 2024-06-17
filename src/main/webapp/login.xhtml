@@ -4,10 +4,8 @@
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:f="jakarta.faces.core"
-      xmlns:jsf="jakarta.faces"
       xmlns:h="jakarta.faces.html"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:my="jakarta.faces.composite/customcomponents">
+      xmlns:p="http://primefaces.org/ui">
 
 <f:view>
     <h:head>
@@ -36,8 +34,6 @@
                     <br/>
                     <p:commandButton icon="pi pi-user" action="#{clientMethods.login()}" value="Accedi">
                     </p:commandButton>
-                <h:outputLabel id="outStatus" value="#{studenteSession.requestStatus}"/>
-                <h:outputLabel id="outMat" value="#{studenteSession.mat}" />
                 </h:form>
             </div>
         </div>

@@ -22,15 +22,9 @@
     <my:topBanner goto_disponibili="#{navigator.goto_disponibili()}" goto_prenotati="#{navigator.goto_prenotati()}" mat="#{studenteSession.mat}" logout="#{clientMethods.logout()}" goto_completati="#{navigator.goto_completati()}"/>
     <div class="flex flex-column justify-content-around mx-8 py-5" style="max-width: 60rem; min-width: 52rem">
         <div class="font-medium text-3xl text-900 fa-border" style="font-family: 'Open Sans',serif">Appelli completati</div>
-        <p:dataList value="#{hello.ls}" var="appello" type="definition">
+        <p:dataList value="#{studenteSession.student.completato}" var="ris" type="definition">
             <div class="py-2">
-                <my:appello time="#{appello.durata_minuti}"
-                            nome="#{appello.nome}"
-                            button_label="Prenota"
-                            data="#{clientMethods.formatDate(appello.data_ora)}"
-                            cdl="#{appello.codcorso}"
-                            button_action="#{adminMethods.saluto()}"
-                            ndomande="#{appello.domande.size()}"/>
+                <my:risultato appello="#{ris.completed_appello}" ris="#{ris}"/>
             </div>
         </p:dataList>
     </div>

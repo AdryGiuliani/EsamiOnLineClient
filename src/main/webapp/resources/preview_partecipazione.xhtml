@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:my="jakarta.faces.composite/customcomponents"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+<f:view>
+    <h:head>
+        <title>Preview #{studenteSession.appelloselezionato.nome}</title>
+        <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.css"/>
+        <h:outputStylesheet library="webjars" name="primeflex/3.3.1/themes/primeone-light.css"/>
+        <h:outputStylesheet name="primefaces/core.js"/>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
+    </h:head>
+        <div class="flex flex-column justify-content-evenly align-content-start py-5" >
+            <p:card style="height: fit-content">
+                <div class="flex flex-column justify-content-evenly align-content-start py-5" style="height: 500px" >
+                <label for="istruzioni" class="block font-medium text-900 mb-2" style="font-family: 'Open Sans',serif">Istruzioni</label>
+                <p:outputLabel id="istruzioni">
+                    Cliccando su "Avvia" inizierai l'esame, sotto trovi le informazioni importanti, ricorda che:<br/>
+                    Risposta esatta = +3 <br/>
+                    Risposta errata = 0 <br/>
+                    Risposta non data = -1 <br/>
+                    Prima di lasciare la postazione, concludi l'appello cliccando su "Termina" nell'ultima pagina, altrimenti non verrà salvato il risultato. Buona fortuna!
+                </p:outputLabel>
+                <div class="flex align-items-center flex-wrap mx-5">
+                    <i class="fa fa-clock-o"/>
+                    <p:outputLabel id="durata" value="#{studenteSession.appelloselezionato.durata_minuti} min"/>
+                </div>
+                <div class="flex align-items-start flex-wrap mx-5">
+                    <p:outputLabel id="ndomande" value="#{studenteSession.appelloselezionato.domande.size()} domande"/>
+                </div>
+                <div class="flex align-items-center flex-wrap mx-5">
+                    <p:outputLabel id="tempodomanda" value="#{studenteSession.appelloselezionato.tempo_domanda_sec}s a domanda"/>
+                </div>
+                </div>
+
+                <h:form>
+                    <div class="flex flex-row justify-content-center">
+                        <p:commandButton value="Avvia" icon="pi pi-play-circle" action="#{clientMethods.startAppello()}"/>
+                    </div>
+                </h:form>
+            </p:card>
+
+
+        </div>
+
+</f:view>
+</html>

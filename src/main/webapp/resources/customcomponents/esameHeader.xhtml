@@ -1,0 +1,62 @@
+<ui:component xmlns:ui="jakarta.faces.facelets"
+              xmlns:cc="jakarta.faces.composite"
+              xmlns:p="http://primefaces.org/ui"
+              xmlns:h="jakarta.faces.html"
+              xmlns:f="http://xmlns.jcp.org/jsf/core"
+            xmlns:pe="http://primefaces.org/ui/extensions">
+    <cc:interface>
+        <cc:attribute name="timer_domanda_action" method-signature="java.lang.String action()" required="true" />
+        <cc:attribute name="timer_appello_action" method-signature="java.lang.String action()" required="true" />
+        <cc:attribute name="exit_action" method-signature="java.lang.String action()" required="true"/>
+    </cc:interface>
+
+    <cc:implementation>
+        <f:view>
+            <h:head>
+                <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.css"/>
+                <h:outputStylesheet library="webjars" name="primeflex/3.3.1/themes/primeone-light.css"/>
+                <h:outputStylesheet name="primefaces/core.js"/>
+                <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
+            </h:head>
+
+            <h:form id="head">
+                <p:remoteCommand name="updatetimerA" action="#{appelloSession.updatetimerA}"/>
+                <p:remoteCommand name="updatetimerD" action="#{appelloSession.updatetimerD}"/>
+
+                <script>
+                    window.syncApp = function(t){
+                        updatetimerA([{ name: "time_app", value: t.current}])
+                    }
+                    window.syncDom = function (t){
+                        updatetimerD([{ name: "time_dom", value: t.current}])
+                    }
+                </script>
+                <p:menubar style="min-width: auto" styleClass="justify-content-center">
+                    <f:facet name="start">
+                        <div class="flex flex-row align-items-center">
+                            <p:outputLabel value="Fine appello:"/>
+                            <p:spacer width="10"/>
+                            <pe:timer id="timerAppello" timeout="#{appelloSession.secAppello}"
+                                      listener="#{appelloSession.onTimeoutAppello()}"
+                                      style="color: black;"
+                            format="HH:mm:ss"
+                            ontimerstep="syncApp(intervalData)"/>
+                            <p:spacer width="20"/>
+                            <p:outputLabel value="Tempo domanda:"/>
+                            <p:spacer width="10"/>
+                            <pe:timer widgetVar="timerDomanda" timeout="#{appelloSession.secDomanda}"
+                                      listener="#{appelloSession.nextDomanda()}"
+                                      style="color: black;"
+                                      format="HH:mm:ss"
+                                      ontimerstep="syncDom(intervalData)"/>
+                        </div>
+                    </f:facet>
+                    <f:facet name="end">
+                        <p:commandButton value="Abbandona" icon="pi pi-fw pi-sign-out" action="#{appelloSession.abbandona()}"/>
+                    </f:facet>
+                </p:menubar>
+
+            </h:form>
+        </f:view>
+    </cc:implementation>
+</ui:component>

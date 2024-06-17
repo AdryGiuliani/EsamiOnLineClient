@@ -19,13 +19,19 @@ public class StudenteSession implements Serializable {
     private List<Appello> disponibili = new ArrayList<>();
     private String mat = "";
     private String cf = "";
-    private CompletedAppello appelloCorrente = CompletedAppello.newBuilder().build();
     private long idAppello = -1;
-    private int requestStatus=0;
-    private Exception exception = null;
+
     private ClientMethods reqDispatcher = new ClientMethods();
+    private long deadline;
+    private Appello appelloselezionato  = new Appello();
 
+    public long getDeadline() {
+        return deadline;
+    }
 
+    public void setDeadline(long deadline) {
+        this.deadline = deadline;
+    }
 
     public ClientMethods getReqDispatcher() {
         return reqDispatcher;
@@ -35,18 +41,6 @@ public class StudenteSession implements Serializable {
         this.reqDispatcher = reqDispatcher;
     }
 
-    public void clearStatus(){
-        requestStatus= 0;
-        exception=null;
-    }
-
-    public int getRequestStatus() {
-        return requestStatus;
-    }
-
-    public void setRequestStatus(int requestStatus) {
-        this.requestStatus = requestStatus;
-    }
 
     public Student getStudent() {
         return student;
@@ -80,22 +74,6 @@ public class StudenteSession implements Serializable {
         this.cf = cf;
     }
 
-    public Exception getException() {
-        return exception;
-    }
-
-    public void setException(Exception exception) {
-        this.exception = exception;
-    }
-
-    public CompletedAppello getAppelloCorrente() {
-        return appelloCorrente;
-    }
-
-    public void setAppelloCorrente(CompletedAppello appelloCorrente) {
-        this.appelloCorrente = appelloCorrente;
-    }
-
     public long getIdAppello() {
         return idAppello;
     }
@@ -105,5 +83,11 @@ public class StudenteSession implements Serializable {
     }
 
 
+    public Appello getAppelloselezionato() {
+        return appelloselezionato;
+    }
 
+    public void setAppelloselezionato(Appello appelloselezionato) {
+        this.appelloselezionato = appelloselezionato;
+    }
 }

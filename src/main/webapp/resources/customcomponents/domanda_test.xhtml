@@ -1,0 +1,32 @@
+<ui:component xmlns:ui="jakarta.faces.facelets"
+              xmlns:cc="jakarta.faces.composite"
+              xmlns:p="http://primefaces.org/ui"
+              xmlns:h="jakarta.faces.html"
+              xmlns:f="http://xmlns.jcp.org/jsf/core"
+              xmlns:c="http://java.sun.com/jsp/jstl/core">
+   <cc:interface>
+      <cc:attribute name="domanda"  required="true" />
+      <cc:attribute name="risposte"  required="true"/>
+   </cc:interface>
+
+   <cc:implementation>
+      <f:view>
+         <h:head>
+            <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.css"/>
+            <h:outputStylesheet library="webjars" name="primeflex/3.3.1/themes/primeone-light.css"/>
+            <h:outputStylesheet name="primefaces/core.js"/>
+            <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
+         </h:head>
+         <p:panel id="card" header="#{domanda.text}" toggleable="true" collapsed="true" style="min-width: initial; max-height: fit-content">
+            <p:dataList value="#{domanda.risposte}" var="ris">
+               <div class="flex flex-row justify-content-between px-2">
+                  <p:outputLabel value="#{ris.getText()}"/>
+                  <p:commandButton icon="pi pi-check" rendered="#{ris.corretta}" disabled="true" style="background-color: aquamarine; border: black"/>
+                  <p:commandButton icon="pi pi-times-circle" rendered="#{!ris.corretta}" disabled="true" style="background-color: lightcoral; border: black"/>
+               </div>
+            </p:dataList>
+         </p:panel>
+
+      </f:view>
+   </cc:implementation>
+</ui:component>
