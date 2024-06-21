@@ -2,14 +2,17 @@ package com.ingsw.esamionline.esamionlineclient.grpcClient;
 
 import application.App;
 import application.persistance.pojos.Appello;
+import application.persistance.pojos.Risultato;
 import application.services.CapsuleDtoAssembler;
 import application.validation.chainsteps.CapsuleValidate;
+import com.ingsw.esamionline.esamionlineclient.AppelloSession;
 import com.ingsw.esamionline.esamionlineclient.StudenteSession;
 import com.ingsw.esamionline.esamionlineclient.commons.AuthCredentials;
 import com.ingsw.esamionline.esamionlineclient.commons.Navigator;
 import com.ingsw.esamionline.esamionlineclient.commons.ClientRequester;
 import com.ingsw.esamionline.esamionlineclient.util.Formatter;
 import gen.javaproto.AppelloID;
+import gen.javaproto.CompletedAppello;
 import gen.javaproto.Credentials;
 import gen.javaproto.Dto;
 import jakarta.el.MethodExpression;
@@ -22,6 +25,7 @@ import org.primefaces.PrimeFaces;
 import jakarta.servlet.http.HttpSession;
 import org.primefaces.model.DialogFrameworkOptions;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -35,9 +39,10 @@ public class ClientMethods implements Serializable {
     private StudenteSession session;
     @Inject
     private Navigator navigator;
-
     @Inject
     private ClientRequester requester;
+    @Inject
+    private AppelloSession sessione_esame;
 
     private AuthCredentials credentials;
 
@@ -61,6 +66,7 @@ public class ClientMethods implements Serializable {
             session.setStudent(cap.getStudent());
             session.setDisponibili(cap.getDisponibili());
             session.setDeadline(cap.getDeadline());
+            session.setSoglia(cap.getSoglia());
             return navigator.passlogin(true);
         }
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Credenziali non valide", cap.getException().getMessage());
@@ -78,8 +84,7 @@ public class ClientMethods implements Serializable {
     }
 
     public void prenota(Appello a){
-        Credentials cred = Credentials.newBuilder().setMat(session.getMat()).setCf(session.getCf()).build();
-        credentials = new AuthCredentials(cred);
+        setCredenziali();
         AppelloID appelloID = AppelloID.newBuilder().setId((Long)a.getId()).build();
         Dto dto = requester.getBlockingStub().withCallCredentials(credentials).prenota(appelloID);
         CapsuleValidate cap = new CapsuleDtoAssembler().disassembleValidate(dto);
@@ -97,14 +102,14 @@ public class ClientMethods implements Serializable {
     }
 
     public void delete_prenotazione(){
-        Credentials cred = Credentials.newBuilder().setMat(session.getMat()).setCf(session.getCf()).build();
-        credentials = new AuthCredentials(cred);
+        setCredenziali();
         AppelloID appid = AppelloID.newBuilder().setId((long)session.getAppelloselezionato().getId()).build();
         Dto dto = requester.getBlockingStub().withCallCredentials(credentials).cancella(appid);
         CapsuleValidate cap = assembler.disassembleValidate(dto);
         if (cap.getStatus()>=0){
             session.getStudent().getPrenotazioni().remove(session.getAppelloselezionato());
             session.getDisponibili().add(session.getAppelloselezionato());
+            session.setAppelloselezionato(null);
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Prenotazione cancellata",
                     "Prenotazione correttamente eliminata, puoi riprenotarti dalla pagina \"Disponibili\"");
             PrimeFaces.current().dialog().showMessageDynamic(message);
@@ -139,20 +144,7 @@ public class ClientMethods implements Serializable {
     }
 
     public void rispostePopup(Appello appello) {
-        if (!session.getAppelloselezionato().equals(appello)){
-            Credentials cred = Credentials.newBuilder().setMat(session.getMat()).setCf(session.getCf()).build();
-            credentials = new AuthCredentials(cred);
-            AppelloID appelloID = AppelloID.newBuilder().setId((Long)appello.getId()).build();
-            Dto dto = requester.getBlockingStub().withCallCredentials(credentials).getFullAppello(appelloID);
-            CapsuleValidate c = assembler.disassembleValidate(dto);
-            if (c.getStatus()<0){
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Errore",
-                        c.getException().getMessage());
-                PrimeFaces.current().dialog().showMessageDynamic(message);
-                return;
-            }
-            session.setAppelloselezionato(c.getAppelloCreato());
-        }
+        if (!get_full_appello(appello)) return;
         DialogFrameworkOptions options = DialogFrameworkOptions.builder()
                     .modal(true)
                     .fitViewport(true)
@@ -186,9 +178,20 @@ public class ClientMethods implements Serializable {
     }
 
     public void partecipaDialog(Appello appello) {
+        if (!get_full_appello(appello)) return;
+        PrimeFaces.current().executeScript("PF('dlg').show();");
+    }
+
+
+    /**
+     * Recupera le informazioni complete sull'appello selezionato (se non già recuperate)
+     * (necessario perchè nel server Appello ha alcuni parametri lazy loaded)
+     * @param appello
+     * @return
+     */
+    private boolean get_full_appello(Appello appello) {
         if (!session.getAppelloselezionato().equals(appello)){
-            Credentials cred = Credentials.newBuilder().setMat(session.getMat()).setCf(session.getCf()).build();
-            credentials = new AuthCredentials(cred);
+            setCredenziali();
             AppelloID appelloID = AppelloID.newBuilder().setId((Long)appello.getId()).build();
             Dto dto = requester.getBlockingStub().withCallCredentials(credentials).getFullAppello(appelloID);
             CapsuleValidate c = assembler.disassembleValidate(dto);
@@ -196,24 +199,62 @@ public class ClientMethods implements Serializable {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Errore",
                         c.getException().getMessage());
                 PrimeFaces.current().dialog().showMessageDynamic(message);
-                return;
+                return false;
             }
             session.setAppelloselezionato(c.getAppelloCreato());
         }
+        return true;
+    }
 
-        DialogFrameworkOptions options = DialogFrameworkOptions.builder()
-                .modal(true)
-                .fitViewport(true)
-                .responsive(true)
-                .width("900px")
-                .contentWidth("100%")
-                .resizeObserver(true)
-                .resizeObserverCenter(true)
-                .resizable(false)
-                .styleClass("max-w-screen")
-                .iframeStyleClass("max-w-screen")
+    public String partecipa(){
+        setCredenziali();
+        AppelloID appelloID = AppelloID.newBuilder().setId((Long) session.getAppelloselezionato().getId()).build();
+        Dto dto = requester.getBlockingStub().withCallCredentials(credentials).partecipa(appelloID);
+        CapsuleValidate cap = assembler.disassembleValidate(dto);
+        System.out.println("capsula>" + cap.getStatus());
+        if (cap.getStatus()>=0){
+            sessione_esame.inizializzaEsame();
+            System.out.println("Sto per redirect");
+            return navigator.goto_esame(true);
+        }
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Partecipazione non valida", cap.getException().getMessage());
+        PrimeFaces.current().dialog().showMessageDynamic(message);
+        return navigator.goto_esame(false);
+    }
+
+    public void terminaAppello(){
+        setCredenziali();
+        sessione_esame.calcolapunteggio();
+        Risultato result = new Risultato();
+        result.setPunteggio(sessione_esame.getPunteggio());
+        result.setSuperato(sessione_esame.getPunteggio()>= session.getSoglia());
+        result.setCompleted_appello(session.getAppelloselezionato());
+        CompletedAppello appcompleto = CompletedAppello.newBuilder()
+                .setIdAppello((Long) session.getAppelloselezionato().getId())
+                .setPunteggio(sessione_esame.getPunteggio())
                 .build();
-        PrimeFaces.current().dialog().openDynamic("/resources/preview_partecipazione", options, null);
+        Dto dto  = requester.getBlockingStub().withCallCredentials(credentials).concludi(appcompleto);
+        CapsuleValidate cap = assembler.disassembleValidate(dto);
+        if (cap.getStatus()>=0){
+            session.getStudent().getCompletato().add(result);
+            session.setResultCorrente(result);
+            System.out.println("Sto per redirect");
+            try{
+                navigator.goto_prenotati_static();
+            }catch (IOException e){
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Errore nella redirezione", "Tranquillo, il risultato è stato salvato correttamente.");
+                PrimeFaces.current().dialog().showMessageDynamic(message);
+            }
+            session.setMostraResult(true);
+            return;
+        }
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Errore nel salvataggio dell'appello", cap.getException().getMessage());
+        PrimeFaces.current().dialog().showMessageDynamic(message);
+    }
+
+    private void setCredenziali(){
+        Credentials cred = Credentials.newBuilder().setMat(session.getMat()).setCf(session.getCf()).build();
+        credentials = new AuthCredentials(cred);
     }
 
 }

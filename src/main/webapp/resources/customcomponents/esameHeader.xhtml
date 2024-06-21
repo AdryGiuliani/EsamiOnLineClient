@@ -18,11 +18,13 @@
                 <h:outputStylesheet name="primefaces/core.js"/>
                 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
             </h:head>
-
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+            </p:confirmDialog>
             <h:form id="head">
                 <p:remoteCommand name="updatetimerA" action="#{appelloSession.updatetimerA}"/>
                 <p:remoteCommand name="updatetimerD" action="#{appelloSession.updatetimerD}"/>
-
                 <script>
                     window.syncApp = function(t){
                         updatetimerA([{ name: "time_app", value: t.current}])
@@ -37,7 +39,7 @@
                             <p:outputLabel value="Fine appello:"/>
                             <p:spacer width="10"/>
                             <pe:timer id="timerAppello" timeout="#{appelloSession.secAppello}"
-                                      listener="#{appelloSession.onTimeoutAppello()}"
+                                      listener="#{cc.attrs.timer_appello_action}"
                                       style="color: black;"
                             format="HH:mm:ss"
                             ontimerstep="syncApp(intervalData)"/>
@@ -45,17 +47,21 @@
                             <p:outputLabel value="Tempo domanda:"/>
                             <p:spacer width="10"/>
                             <pe:timer widgetVar="timerDomanda" timeout="#{appelloSession.secDomanda}"
-                                      listener="#{appelloSession.nextDomanda()}"
+                                      listener="#{cc.attrs.timer_domanda_action}"
                                       style="color: black;"
                                       format="HH:mm:ss"
                                       ontimerstep="syncDom(intervalData)"/>
+
+                        <p:spacer width="20"/>
+                        Domanda #{appelloSession.getIndexcur() +1} / #{appelloSession.domande.size()}
                         </div>
                     </f:facet>
                     <f:facet name="end">
-                        <p:commandButton value="Abbandona" icon="pi pi-fw pi-sign-out" action="#{appelloSession.abbandona()}"/>
+                        <p:commandButton value="Abbandona" icon="pi pi-fw pi-sign-out" action="#{cc.attrs.exit_action}">
+                            <p:confirm header="Conferma" message="Sei sicuro di voler abbandonare?" icon="pi pi-exclamation-triangle"/>
+                        </p:commandButton>
                     </f:facet>
                 </p:menubar>
-
             </h:form>
         </f:view>
     </cc:implementation>

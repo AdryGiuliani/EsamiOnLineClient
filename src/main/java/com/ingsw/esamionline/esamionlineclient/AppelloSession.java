@@ -4,15 +4,15 @@ import application.persistance.pojos.Appello;
 import application.persistance.pojos.Domanda;
 import application.persistance.pojos.Risposta;
 import com.ingsw.esamionline.esamionlineclient.commons.Navigator;
-import jakarta.el.MethodExpression;
+import com.ingsw.esamionline.esamionlineclient.grpcClient.ClientMethods;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import org.primefaces.PrimeFaces;
 
 import java.io.Serializable;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -24,16 +24,39 @@ public class AppelloSession implements Serializable {
     @Inject
     private StudenteSession student;
     @Inject
+    private ClientMethods dispatcher;
+    @Inject
     private Navigator navigator;
     private List<Domanda> domande;
-    private List<Risposta> rispostedate;
+
+
+    public List<String> getRispostedate() {
+        return rispostedate;
+    }
+
+    public void setRispostedate(List<String> rispostedate) {
+        this.rispostedate = rispostedate;
+    }
+
+    private List<String> rispostedate;
     private Domanda curDomanda;
     private int indexcur=0;
     private int secAppello = 600;
-    private int secDomanda = 60;
-    private Risposta selezione = null;
+    private int secDomanda = 5;
+    private int tDomandaIniziale = 5;
+
+    public String getSelezione() {
+        return selezione;
+    }
+
+    public void setSelezione(String selezione) {
+        this.selezione = selezione;
+    }
+
+    private String selezione = null;
     private boolean ultimaDomanda;
     private int punteggio = 0;
+
 
     public int getSecDomanda() {
         return secDomanda;
@@ -75,14 +98,6 @@ public class AppelloSession implements Serializable {
         this.domande = domande;
     }
 
-    public List<Risposta> getRispostedate() {
-        return rispostedate;
-    }
-
-    public void setRispostedate(List<Risposta> rispostedate) {
-        this.rispostedate = rispostedate;
-    }
-
     public Domanda getCurDomanda() {
         return curDomanda;
     }
@@ -99,14 +114,16 @@ public class AppelloSession implements Serializable {
         this.indexcur = indexcur;
     }
 
-    public String  inizializzaEsame(){
+    public void  inizializzaEsame(){
+        indexcur = 0;
         Appello cur = student.getAppelloselezionato();
-        rispostedate = new LinkedList<>();
         domande = cur.getDomande();
+        ultimaDomanda = indexcur == domande.size()-1;
+        rispostedate = new LinkedList<>();
         curDomanda = domande.get(indexcur);
         secAppello = (int) TimeUnit.MINUTES.toSeconds(cur.getDurata_minuti());
         secDomanda = cur.getTempo_domanda_sec();
-        return navigator.goto_esame();
+        tDomandaIniziale = cur.getTempo_domanda_sec();
     }
 
 
@@ -123,36 +140,47 @@ public class AppelloSession implements Serializable {
     }
 
     public void nextDomanda() {
-        indexcur++;
-        rispostedate.add(selezione);
-        curDomanda = domande.get(indexcur);
-        secDomanda = student.getAppelloselezionato().getTempo_domanda_sec();
-        if (indexcur == domande.size()-1)
-            ultimaDomanda=true;
-    }
-
-    public void onTimeoutAppello(){
-        punteggio = calcolapunteggio();
-
-    }
-
-    private int calcolapunteggio() {
-        int sum = 0;
-        for (Risposta r : rispostedate){
-            if (r == null)
-                sum--;
-            else if (r.isCorretta())
-                sum+=3;
+        if(ultimaDomanda)
+            dispatcher.terminaAppello();
+        else{
+            indexcur++;
+            secDomanda = tDomandaIniziale;
+            rispostedate.add(selezione);
+            selezione=null;
+            curDomanda = domande.get(indexcur);
+            secDomanda = student.getAppelloselezionato().getTempo_domanda_sec();
+            if (indexcur == domande.size()-1)
+                ultimaDomanda=true;
+            PrimeFaces.current().ajax().update("header", "response");
         }
-        return Math.round(30*((float) sum /(3*domande.size())));
+
     }
 
-    public Risposta getSelezione() {
-        return selezione;
-    }
 
-    public void setSelezione(Risposta selezione) {
-        this.selezione = selezione;
+    /**
+     * calcola il punteggio ottenuto, tenendo conto dell'utlima risposta data come ancora non inserita
+     */
+    public void calcolapunteggio() {
+        int sum = 0;
+        rispostedate.add(selezione);
+        System.out.println(rispostedate);
+        for (int i = 0 ; i<domande.size(); i++){
+            String rispData = rispostedate.get(i);
+            Domanda domanda = domande.get(i);
+            if (rispData == null) {
+                sum--;
+                continue;
+            }
+            for (Risposta r : domanda.getRisposte()){
+                if (r.getText().equals(rispData) && r.isCorretta()){
+                        sum+=3;
+                        break;
+                }
+            }
+        }
+        float part = (float) sum/(3*domande.size());
+        if (part<0) part=0;
+        punteggio= Math.round(30*(part));
     }
 
     public boolean isUltimaDomanda() {
@@ -169,5 +197,12 @@ public class AppelloSession implements Serializable {
 
     public void setPunteggio(int punteggio) {
         this.punteggio = punteggio;
+    }
+
+    public void log(){
+        if (selezione == null)
+            System.out.println("change> null");
+        else
+            System.out.println("change>"+selezione);
     }
 }

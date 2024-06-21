@@ -11,7 +11,7 @@
 
 <f:view>
     <f:metadata>
-        <f:viewAction action="#{loginChecker.checkLogin}" />
+        <f:viewAction action="#{loginChecker.checkLogin}"/>
     </f:metadata>
     <h:head>
         <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.css"/>
@@ -19,6 +19,48 @@
         <h:outputStylesheet name="primefaces/core.js"/>
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
     </h:head>
+    <p:dialog widgetVar="dlg" header="#{studenteSession.appelloselezionato.nome} Info"  dynamic="true" modal="true" id="preview"
+                fitViewport="true">
+
+            <p:card style="height: fit-content">
+                <div class="flex flex-column justify-content-evenly align-content-start py-5" style="height: 500px" >
+                    <label for="istruzioni" class="block font-medium text-900 mb-2" style="font-family: 'Open Sans',serif">Istruzioni</label>
+                    <p:outputLabel id="istruzioni">
+                        Cliccando su "Avvia" inizierai l'esame, sotto trovi le informazioni importanti, ricorda che:<br/>
+                        Risposta esatta = +3 <br/>
+                        Risposta errata = 0 <br/>
+                        Risposta non data = -1 <br/>
+                        Prima di lasciare la postazione, concludi l'appello cliccando su "Termina" nell'ultima pagina, altrimenti non verrà salvato il risultato. Buona fortuna!
+                    </p:outputLabel>
+                    <div class="flex align-items-center flex-wrap mx-5">
+                        <i class="fa fa-clock-o"/>
+                        <p:outputLabel id="durata" value="#{studenteSession.appelloselezionato.durata_minuti} min"/>
+                    </div>
+                    <div class="flex align-items-start flex-wrap mx-5">
+                        <p:outputLabel id="ndomande" value="#{studenteSession.appelloselezionato.domande.size()} domande"/>
+                    </div>
+                    <div class="flex align-items-center flex-wrap mx-5">
+                        <p:outputLabel id="tempodomanda" value="#{studenteSession.appelloselezionato.tempo_domanda_sec}s a domanda"/>
+                    </div>
+                </div>
+                <h:form>
+                    <div class="flex flex-row justify-content-center">
+                        <p:commandButton value="Avvia" icon="pi pi-play-circle" action="#{clientMethods.partecipa}"/>
+                    </div>
+                </h:form>
+            </p:card>
+
+    </p:dialog>
+    <p:dialog visible="#{studenteSession.showResult()}" widgetVar="dlg_esito" header="#{studenteSession.resultCorrente.completed_appello.nome} Info"  modal="true" id="esito"
+              fitViewport="true">
+        <p:column headerText="Voto">
+            <h:outputText value="#{studenteSession.resultCorrente.punteggio}"/>
+        </p:column>
+        <p:column headerText="Superato">
+            <p:commandButton icon="pi pi-check" rendered="#{studenteSession.resultCorrente.superato}" disabled="true" style="background-color: limegreen; border: black"/>
+            <p:commandButton icon="pi pi-times-circle" rendered="#{!studenteSession.resultCorrente.superato}" disabled="true" style="background-color: lightcoral; border: black"/>
+        </p:column>
+    </p:dialog>
     <my:topBanner goto_disponibili="#{navigator.goto_disponibili()}" goto_prenotati="#{navigator.goto_prenotati()}" mat="#{studenteSession.mat}" logout="#{clientMethods.logout()}" goto_completati="#{navigator.goto_completati()}"/>
     <div class="flex flex-column justify-content-around mx-8 py-5" style="max-width: 60rem; min-width: 52rem">
         <div class="font-medium text-3xl text-900 fa-border" style="font-family: 'Open Sans',serif">Le tue prenotazioni</div>

@@ -1,9 +1,12 @@
 package com.ingsw.esamionline.esamionlineclient.commons;
 
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
+import org.primefaces.PrimeFaces;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 @Named
@@ -52,10 +55,10 @@ public class Navigator implements Serializable {
         return FacesContext.getCurrentInstance().getViewRoot().getViewId();
     }
 
-    public String goto_esame(){
+    public String goto_esame( boolean pass){
         if (!userLoggedIn) return LOGIN;
-        if (!currentPage.equals(ESAME)){
-            currentPage= ESAME;
+        if (!currentPage.equals(ESAME) && pass){
+            currentPage=ESAME;
             return ESAME;
         }
         return FacesContext.getCurrentInstance().getViewRoot().getViewId();
@@ -101,4 +104,7 @@ public class Navigator implements Serializable {
     }
 
 
+    public void goto_prenotati_static() throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().redirect("/esamionline-client-1.0/prenotazioni.xhtml");
+    }
 }

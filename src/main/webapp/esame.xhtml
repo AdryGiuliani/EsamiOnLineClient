@@ -6,8 +6,11 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:my="jakarta.faces.composite/customcomponents"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
 <f:view>
+    <f:metadata>
+        <f:viewAction action="#{loginChecker.checkLogin}"/>
+    </f:metadata>
     <h:head>
         <title>#{adminSession.selectedAppello.nome}</title>
         <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.css"/>
@@ -15,8 +18,64 @@
         <h:outputStylesheet name="primefaces/core.js"/>
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
     </h:head>
-    <p:dataList value="#{adminSession.selectedAppello.domande}" var="domanda" type="ordered">
-        <my:domanda risposte="#{domanda.risposte}" domanda="#{domanda.text}"/>
-    </p:dataList>
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" />
+    </p:confirmDialog>
+    <h:form id="response">
+        <p:remoteCommand name="updatetimerA" action="#{appelloSession.updatetimerA}"/>
+        <p:remoteCommand name="updatetimerD" action="#{appelloSession.updatetimerD}"/>
+        <script type="">
+            window.syncApp = function(t){
+                updatetimerA([{ name: "time_app", value: t.current}])
+            }
+            window.syncDom = function (t){
+                updatetimerD([{ name: "time_dom", value: t.current}])
+            }
+        </script>
+        <p:menubar style="min-width: auto" styleClass="justify-content-center">
+            <f:facet name="start">
+                <div class="flex flex-row align-items-center">
+                    <p:outputLabel value="Fine appello:"/>
+                    <p:spacer width="10"/>
+                    <pe:timer id="timerAppello" timeout="#{appelloSession.secAppello}"
+                              listener="#{clientMethods.terminaAppello()}"
+                              style="color: black;"
+                              format="HH:mm:ss"
+                              ontimerstep="syncApp(intervalData)"/>
+                    <p:spacer width="20"/>
+                    <p:outputLabel value="Tempo domanda:"/>
+                    <p:spacer width="10"/>
+                    <pe:timer widgetVar="timerDomanda" timeout="#{appelloSession.secDomanda}"
+                              listener="#{appelloSession.nextDomanda()}"
+                              style="color: black;"
+                              format="HH:mm:ss"
+                              ontimerstep="syncDom(intervalData)"/>
+                    <p:spacer width="20"/>
+                    Domanda #{appelloSession.getIndexcur() +1} / #{appelloSession.domande.size()}
+                </div>
+            </f:facet>
+            <f:facet name="end">
+                <p:commandButton value="Abbandona" icon="pi pi-fw pi-sign-out" action="#{cc.attrs.exit_action}">
+                    <p:confirm header="Conferma" message="Sei sicuro di voler abbandonare?" icon="pi pi-exclamation-triangle"/>
+                </p:commandButton>
+            </f:facet>
+        </p:menubar>
+        <p:panel id="card" header="#{appelloSession.curDomanda.text}" collapsed="false" style="min-width: initial; max-height: fit-content">
+            <p:selectOneRadio id="risposte" value="#{appelloSession.selezione}" layout="responsive" columns="1" unselectable="true">
+                <f:selectItems value="#{appelloSession.curDomanda.risposte}" var="risposta" itemLabel="#{risposta.text}" itemValue="#{risposta.text}"/>
+                <f:ajax execute="response @form" render="response @form"/>
+            </p:selectOneRadio>
+        </p:panel>
+        <p:outputLabel value="#{appelloSession.selezione}" id ="out"/>
+
+    <div class="flex flex-row justify-content-end">
+        <p:outputLabel value="#{appelloSession.selezione}"/>
+        <p:commandButton value="Avanti" rendered="#{!appelloSession.ultimaDomanda}" action="#{appelloSession.nextDomanda()}"/>
+        <p:commandButton value="Termina" rendered="#{appelloSession.ultimaDomanda}" action="#{clientMethods.terminaAppello()}">
+            <p:confirm header="Conferma" message="Sei sicuro di voler terminare?" icon="pi pi-exclamation-triangle"/>
+        </p:commandButton>
+    </div>
+    </h:form>
 </f:view>
 </html>
