@@ -1,4 +1,4 @@
-#Progetto Ing-sw distribuito Esami-online (modulo frontend)
+# Progetto Ing-sw distribuito Esami-online (modulo frontend)
 Il frontend del progetto è stato realizzato utilizzando Jboss/WIldfly 32 , Jakarta Faces, PrimeFaces, Primeflex e FontAwesome, per far partire il server è sufficiente:
 
 1. Scaricare la root directory wildfly : https://github.com/wildfly/wildfly/releases/download/32.0.1.Final/wildfly-32.0.1.Final.zip
