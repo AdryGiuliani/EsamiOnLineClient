@@ -21,7 +21,6 @@
     </h:head>
     <p:dialog widgetVar="dlg" header="#{studenteSession.appelloselezionato.nome} Info"  dynamic="true" modal="true" id="preview"
                 fitViewport="true">
-
             <p:card style="height: fit-content">
                 <div class="flex flex-column justify-content-evenly align-content-start py-5" style="height: 500px" >
                     <label for="istruzioni" class="block font-medium text-900 mb-2" style="font-family: 'Open Sans',serif">Istruzioni</label>
@@ -61,16 +60,31 @@
             <p:commandButton icon="pi pi-times-circle" rendered="#{!studenteSession.resultCorrente.superato}" disabled="true" style="background-color: lightcoral; border: black"/>
         </p:column>
     </p:dialog>
+    <p:dialog widgetVar="dlg_del_prenotazione" header="Attenzione" dynamic="true" modal="true" fitViewport="true">
+        <h:form>
+            <div class="flex flex-column justify-content-around">
+                <p:outputLabel value="La prenotazione seguente verrà eliminata: #{studenteSession.appelloselezionato.nome}"/>
+                <p:spacer height="100px"/>
+                <div class="flex flex-row justify-content-center">
+                    <p:commandButton update="list_prenotazioni" value="Elimina" icon="pi pi-trash" style="background-color: darkred; border-color: black" action="#{clientMethods.delete_prenotazione()}">
+                    </p:commandButton>
+                </div>
+            </div>
+        </h:form>
+    </p:dialog>
+    <p:dialog visible="#{studenteSession.confirmDelPrenotazione()}" header="Successo" modal="true" fitViewport="true" dynamic="true" closeOnEscape="true">
+        <p:outputLabel value="Prenotazione correttamente eliminata"/>
+    </p:dialog>
     <my:topBanner goto_disponibili="#{navigator.goto_disponibili()}" goto_prenotati="#{navigator.goto_prenotati()}" mat="#{studenteSession.mat}" logout="#{clientMethods.logout()}" goto_completati="#{navigator.goto_completati()}"/>
     <div class="flex flex-column justify-content-around mx-8 py-5" style="max-width: 60rem; min-width: 52rem">
         <div class="font-medium text-3xl text-900 fa-border" style="font-family: 'Open Sans',serif">Le tue prenotazioni</div>
-        <p:dataList value="#{studenteSession.student.prenotazioni}" var="appello" type="definition">
+        <p:dataList id="list_prenotazioni" value="#{studenteSession.student.prenotazioni}" var="appello" type="definition">
             <div class="py-2">
                 <my:prenotazione nome="#{appello.nome}"
                                  button1_label="Partecipa"
                                  button2_label="Cancella"
                                  button1_action="#{clientMethods.partecipaDialog(appello)}"
-                                 button2_action="#{clientMethods.elimina_prenotazione(appello)}"
+                                 button2_action="#{clientMethods.elimina_prenotazione_dialog(appello)}"
                                  data="#{clientMethods.formatDate(appello.data_ora)}"
                                  button1_active="#{clientMethods.partecipaCheck(appello)}"
                                  button2_active="#{clientMethods.deadlineCheck(appello.data_ora)}"/>

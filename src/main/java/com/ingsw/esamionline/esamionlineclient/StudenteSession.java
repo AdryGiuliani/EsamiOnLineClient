@@ -27,7 +27,17 @@ public class StudenteSession implements Serializable {
     private int soglia;
     private Appello appelloselezionato  = new Appello();
     private Risultato resultCorrente;
-    private boolean mostraResult =true;
+    private boolean mostraResult =false;
+
+    public boolean isDialogConfirmDelete() {
+        return dialogConfirmDelete;
+    }
+
+    public void setDialogConfirmDelete(boolean dialogConfirmDelete) {
+        this.dialogConfirmDelete = dialogConfirmDelete;
+    }
+
+    private boolean dialogConfirmDelete =false;
 
     public long getDeadline() {
         return deadline;
@@ -40,6 +50,14 @@ public class StudenteSession implements Serializable {
         System.out.println("method risultato ok");
         if (mostraResult){
             mostraResult=false;
+            return true;
+        }
+        return false;
+    }
+    public boolean confirmDelPrenotazione(){
+        System.out.println("method risultato ok");
+        if (dialogConfirmDelete){
+            dialogConfirmDelete=false;
             return true;
         }
         return false;

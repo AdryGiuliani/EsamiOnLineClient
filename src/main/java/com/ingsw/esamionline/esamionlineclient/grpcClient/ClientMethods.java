@@ -1,6 +1,5 @@
 package com.ingsw.esamionline.esamionlineclient.grpcClient;
 
-import application.App;
 import application.persistance.pojos.Appello;
 import application.persistance.pojos.Risultato;
 import application.services.CapsuleDtoAssembler;
@@ -15,7 +14,6 @@ import gen.javaproto.AppelloID;
 import gen.javaproto.CompletedAppello;
 import gen.javaproto.Credentials;
 import gen.javaproto.Dto;
-import jakarta.el.MethodExpression;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -97,11 +95,12 @@ public class ClientMethods implements Serializable {
         }
         if (cap.getException() == null)
             return;
+        session.setDisponibili(cap.getDisponibili());
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Impossibile prenotare", cap.getException().getMessage());
         PrimeFaces.current().dialog().showMessageDynamic(message);
     }
 
-    public void delete_prenotazione(){
+    public String delete_prenotazione(){
         setCredenziali();
         AppelloID appid = AppelloID.newBuilder().setId((long)session.getAppelloselezionato().getId()).build();
         Dto dto = requester.getBlockingStub().withCallCredentials(credentials).cancella(appid);
@@ -110,14 +109,13 @@ public class ClientMethods implements Serializable {
             session.getStudent().getPrenotazioni().remove(session.getAppelloselezionato());
             session.getDisponibili().add(session.getAppelloselezionato());
             session.setAppelloselezionato(null);
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Prenotazione cancellata",
-                    "Prenotazione correttamente eliminata, puoi riprenotarti dalla pagina \"Disponibili\"");
-            PrimeFaces.current().dialog().showMessageDynamic(message);
+            PrimeFaces.current().executeScript("PF('dlg_del_prenotazione').hide();");
         }
         if (cap.getException() == null)
-            return;
+            return "";
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Impossibile cancellare prenotazione", cap.getException().getMessage());
         PrimeFaces.current().dialog().showMessageDynamic(message);
+        return "";
     }
     private boolean checkInserimento() {
         // Logic to handle form submission
@@ -160,21 +158,9 @@ public class ClientMethods implements Serializable {
             PrimeFaces.current().dialog().openDynamic("/resources/viewrisposte_stud", options, null);
     }
 
-    public void elimina_prenotazione(Appello app){
+    public void elimina_prenotazione_dialog(Appello app){
         session.setAppelloselezionato(app);
-        DialogFrameworkOptions options = DialogFrameworkOptions.builder()
-                .modal(true)
-                .fitViewport(true)
-                .responsive(true)
-                .width("900px")
-                .contentWidth("100%")
-                .resizeObserver(true)
-                .resizeObserverCenter(true)
-                .resizable(false)
-                .styleClass("max-w-screen")
-                .iframeStyleClass("max-w-screen")
-                .build();
-        PrimeFaces.current().dialog().openDynamic("/resources/confirmdialog_prenotazione", options, null);
+        PrimeFaces.current().executeScript("PF('dlg_del_prenotazione').show();");
     }
 
     public void partecipaDialog(Appello appello) {
@@ -190,7 +176,7 @@ public class ClientMethods implements Serializable {
      * @return
      */
     private boolean get_full_appello(Appello appello) {
-        if (!session.getAppelloselezionato().equals(appello)){
+        if (session.getAppelloselezionato()==null || !session.getAppelloselezionato().equals(appello)){
             setCredenziali();
             AppelloID appelloID = AppelloID.newBuilder().setId((Long)appello.getId()).build();
             Dto dto = requester.getBlockingStub().withCallCredentials(credentials).getFullAppello(appelloID);

@@ -18,19 +18,19 @@
     </h:head>
         <h:form id="appelloform">
             <label for="nome" class="block font-medium text-900 mb-2" style="font-family: 'Open Sans',serif">Nome</label>
-            <p:inputText maxlength="20" id="nome" styleClass="w-full mb-3" placeholder="username" value="#{adminSession.selectedAppello.nome}">
+            <p:inputText maxlength="20" id="nome" styleClass="w-full mb-3" placeholder="nome appello" value="#{adminSession.selectedAppello.nome}">
                 <f:ajax event="change"/>
             </p:inputText>
             <label for="codcorso" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">CdL</label>
-            <p:inputText maxlength="20" id="codcorso" styleClass="w-full mb-3" placeholder="password" value="#{adminSession.selectedAppello.codcorso}">
+            <p:inputText maxlength="20" id="codcorso" styleClass="w-full mb-3" placeholder="cdl appello" value="#{adminSession.selectedAppello.codcorso}">
                 <f:ajax event="change"/>
             </p:inputText>
             <label for="durata" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">Durata</label>
-            <p:inputText  maxlength="20" id="durata" styleClass="w-full mb-3" placeholder="password" value="#{adminSession.selectedAppello.durata_minuti}">
+            <p:inputText  maxlength="20" id="durata" styleClass="w-full mb-3" placeholder="durata(min)" value="#{adminSession.selectedAppello.durata_minuti}">
                 <f:ajax event="change"/>
             </p:inputText>
             <label for="tempodomanda" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">Tempo a domanda (in secondi)</label>
-            <p:inputText maxlength="20" id="tempodomanda" styleClass="w-full mb-3" placeholder="password" value="#{adminSession.selectedAppello.tempo_domanda_sec}">
+            <p:inputText maxlength="20" id="tempodomanda" styleClass="w-full mb-3" placeholder="tempo(s)" value="#{adminSession.selectedAppello.tempo_domanda_sec}">
                 <f:ajax event="change"/>
             </p:inputText>
             <label for="data" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">Data esame</label>

@@ -21,7 +21,7 @@
          <p:outputLabel value="La prenotazione seguente verrà eliminata: #{studenteSession.appelloselezionato.nome}"/>
          <p:spacer height="100px"/>
          <div class="flex flex-row justify-content-center">
-            <p:commandButton value="Elimina" icon="pi pi-trash" style="background-color: darkred; border-color: black" action="#{clientMethods.delete_prenotazione()}">
+            <p:commandButton value="Elimina" icon="pi pi-trash" style="background-color: darkred; border-color: black" action="prenotazioni?faces-redirect=true">
                <p:ajax process="@all"/>
             </p:commandButton>
          </div>

@@ -26,7 +26,7 @@ import org.primefaces.PrimeFaces;
 import org.primefaces.context.PrimeFacesContext;
 import org.primefaces.model.DialogFrameworkOptions;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.concurrent.TimeUnit;
 
 @Named
@@ -128,7 +128,7 @@ public class AdminMethods implements Serializable {
     }
     public void modify(Appello app){
         session.setModificaAppello(true);
-        session.setSelectedAppello(app); //MAY USE PROTOTYPE
+        session.setSelectedAppello((Appello)copy(app));
         DialogFrameworkOptions options = DialogFrameworkOptions.builder()
                 .modal(true)
                 .fitViewport(true)
@@ -273,4 +273,18 @@ public class AdminMethods implements Serializable {
         session.getSelectedAppello().getDomande().add(new Domanda());
     }
 
+    private Object copy(Object o){
+        Object res=null;
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(o);
+            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+            ObjectInputStream ois = new ObjectInputStream(bis);
+            res = ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return res;
+    }
 }

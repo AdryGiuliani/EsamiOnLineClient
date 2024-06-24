@@ -18,8 +18,8 @@
             </h:head>
             <h:form>
                 <label for="domlist" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">Domande appello</label>
-                <p:dataList id="domlist" value="#{cc.attrs.domande}" var="dom" type="ordered">
-                        <p:commandButton icon="pi pi-times" styleClass="rounded-button" style="background-color: lightcoral; border: black;" action="#{cc.attrs.domande.remove(dom)}">
+                <p:dataList id="domlist" widgetVar="domlist" value="#{cc.attrs.domande}" var="dom" type="ordered">
+                        <p:commandButton update="@form domlist" icon="pi pi-times" styleClass="rounded-button" style="background-color: lightcoral; border: black;" action="#{cc.attrs.domande.remove(dom)}">
                             <f:ajax event="click" render="@form risplist domlist" process="@form risplist domlist"/>
                         </p:commandButton>
                     <p:inputTextarea id="testo" styleClass="w-full mb-3" placeholder="testo della domanda" value="#{dom.text}">
@@ -43,11 +43,11 @@
                             </div>
                         </div>
                     </p:dataList>
-                    <p:commandButton value="Aggiungi risposta" icon="pi pi-plus" action="#{adminMethods.addRisposta(dom)}">
+                    <p:commandButton update="@form domlist" value="Aggiungi risposta" icon="pi pi-plus" action="#{adminMethods.addRisposta(dom)}">
                         <f:ajax event="click" render="@form risplist domlist" process="@form risplist domlist" />
                     </p:commandButton>
                 </p:dataList>
-                <p:commandButton value="Aggiungi domanda" icon="pi pi-plus" action="#{adminMethods.addDomanda()}">
+                <p:commandButton update="@form domlist" value="Aggiungi domanda" icon="pi pi-plus" action="#{adminMethods.addDomanda()}">
                     <f:ajax event="click" render="@form risplist domlist" process="@form risplist domlist"/>
                 </p:commandButton>
             </h:form>
