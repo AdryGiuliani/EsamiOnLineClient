@@ -7,4 +7,4 @@ Il frontend del progetto è stato realizzato utilizzando Jboss/WIldfly 32 , Jaka
 4. Creare configurazione di run che avvii: main app.Application (start del grpc server) + wildfly
 5. è possibile collegarsi al frontend /login.xhtml è il login per client, /admin.xhtml la controparte di amministrazione.
 
-Il lato backend è inserito come dipendenza maven all'interno del pom e disponibile al repository: https://github.com/AdryGiuliani/EsamiOnLine
+Il lato backend è inserito come dipendenza maven all'interno del pom e disponibile al repository: https://github.com/AdryGiuliani/EsamiOnLine, potreppe essere necessario effettuare, dopo aver scaricato il backend, mvn clean install per rendere visibile il repository backend anche lato frontend.
