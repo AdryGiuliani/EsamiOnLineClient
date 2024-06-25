@@ -75,6 +75,7 @@ public class AdminMethods implements Serializable {
 
     public void info(Appello app){
         session.setSelectedAppello(app);
+        PrimeFaces.current().ajax().update("confrm_dlg_del","confrm_dlg_edit");
         DialogFrameworkOptions options = DialogFrameworkOptions.builder()
                 .modal(true)
                 .fitViewport(true)
@@ -112,53 +113,21 @@ public class AdminMethods implements Serializable {
     public void addAppello(){
         session.setModificaAppello(false);
         session.setSelectedAppello(new Appello());
-        DialogFrameworkOptions options = DialogFrameworkOptions.builder()
-                .modal(true)
-                .fitViewport(true)
-                .responsive(true)
-                .width("900px")
-                .contentWidth("100%")
-                .resizeObserver(true)
-                .resizeObserverCenter(true)
-                .resizable(false)
-                .styleClass("max-w-screen")
-                .iframeStyleClass("max-w-screen")
-                .build();
-        PrimeFaces.current().dialog().openDynamic("/resources/appelloeditor", options, null);
+        PrimeFaces.current().ajax().update("confrm_dlg_del","confrm_dlg_edit");
+        PrimeFaces.current().executeScript("PF('dlg_edit_app').show();");
     }
+
     public void modify(Appello app){
         session.setModificaAppello(true);
         session.setSelectedAppello((Appello)copy(app));
-        DialogFrameworkOptions options = DialogFrameworkOptions.builder()
-                .modal(true)
-                .fitViewport(true)
-                .responsive(true)
-                .width("900px")
-                .contentWidth("100%")
-                .resizeObserver(true)
-                .resizeObserverCenter(true)
-                .resizable(false)
-                .styleClass("max-w-screen")
-                .iframeStyleClass("max-w-screen")
-                .build();
-        PrimeFaces.current().dialog().openDynamic("/resources/appelloeditor", options, null);
+        PrimeFaces.current().ajax().update("confrm_dlg_del","confrm_dlg_edit");
+        PrimeFaces.current().executeScript("PF('dlg_edit_app').show();");
     }
 
     public void deleteDialog(Appello app){
-        session.setSelectedAppello(app); //MAY USE PROTOTYPE
-        DialogFrameworkOptions options = DialogFrameworkOptions.builder()
-                .modal(true)
-                .fitViewport(true)
-                .responsive(true)
-                .width("450px")
-                .contentWidth("100%")
-                .resizeObserver(true)
-                .resizeObserverCenter(true)
-                .resizable(true)
-                .styleClass("max-w-screen")
-                .iframeStyleClass("max-w-screen")
-                .build();
-        PrimeFaces.current().dialog().openDynamic("/resources/confirmdialog", options, null);
+        session.setSelectedAppello(app);
+        PrimeFaces.current().ajax().update("confrm_dlg_del","confrm_dlg_edit");
+        PrimeFaces.current().executeScript("PF('dlg_del_app').show();");
     }
 
     public void opzioniDialog(){
@@ -200,6 +169,7 @@ public class AdminMethods implements Serializable {
             PrimeFaces.current().dialog().showMessageDynamic(dialog);
             return;
         }
+        session.getSelectedAppello().setId(cap.getAppelloID());
         session.getAllAppellos().remove(session.getSelectedAppello());
         session.getAllAppellos().add(session.getSelectedAppello());
         session.getAllAppellos().sort((o1, o2) -> o2.getData_ora().compareTo(o1.getData_ora()));
@@ -215,14 +185,14 @@ public class AdminMethods implements Serializable {
         Dto dto = requester.getBlockingStub().withCallCredentials(credentials).rimuovi(message);
         CapsuleValidate cap = assembler.disassembleValidate(dto);
         if (cap.getStatus()<0){
-            FacesMessage dialog = new FacesMessage(FacesMessage.SEVERITY_WARN, "Errore nell'eliminazione", cap.getException().getMessage());
+            System.out.println(session.getSelectedAppello());
+            FacesMessage dialog = new FacesMessage(FacesMessage.SEVERITY_WARN, "Errore nell'eliminazione", cap.getException().toString());
             PrimeFaces.current().dialog().showMessageDynamic(dialog);
             return;
         }
         session.getAllAppellos().remove(session.getSelectedAppello());
         session.setSelectedAppello(new Appello());
-        FacesMessage dialog = new FacesMessage(FacesMessage.SEVERITY_INFO, "Appello eliminato correttamente", "Appello correttamente eliminato");
-        PrimeFaces.current().dialog().showMessageDynamic(dialog);
+        PrimeFaces.current().executeScript("PF('dlg_del_app').hide();");
     }
 
     public void saveOptions(){

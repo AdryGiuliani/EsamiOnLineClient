@@ -17,20 +17,64 @@ xmlns:my="jakarta.faces.composite/customcomponents">
         <h:outputStylesheet library="webjars" name="primeflex/3.3.1/themes/primeone-light.css"/>
         <h:outputStylesheet name="primefaces/core.js"/>
     </h:head>
-    <my:adminHeader username="#{adminSession.username}" logout="#{adminMethods.logout()}" impostazioni_action="#{adminMethods.opzioniDialog()}"/>
-    <h:form>
-        <div class="flex flex-column justify-content-around mx-8 py-5" style="max-width: 60rem; min-width: 52rem">
+    <p:dialog id="confrm_dlg_del" widgetVar="dlg_del_app" header="Attenzione" dynamic="true" modal="true" fitViewport="true">
+        <h:form>
+            <div class="flex flex-column justify-content-around">
+                <p:outputLabel value="L'appello seguente verrà eliminato: #{adminSession.selectedAppello.nome}"/>
+                <p:spacer height="100px"/>
+                <div class="flex flex-row justify-content-center">
+                    <p:commandButton update="all_app" value="Elimina" icon="pi pi-trash" style="background-color: darkred; border-color: black" action="#{adminMethods.delete()}">
+                    </p:commandButton>
+                </div>
+            </div>
+        </h:form>
+    </p:dialog>
+    <p:dialog id="confrm_dlg_edit" widgetVar="dlg_edit_app" header="Editor Appello" dynamic="true" modal="true" fitViewport="true" width="600">
+        <h:form id="appelloform">
+            <label for="nome" class="block font-medium text-900 mb-2" style="font-family: 'Open Sans',serif">Nome</label>
+            <p:inputText maxlength="20" id="nome" styleClass="w-full mb-3" placeholder="nome appello" value="#{adminSession.selectedAppello.nome}">
+                <f:ajax event="change"/>
+            </p:inputText>
+            <label for="codcorso" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">CdL</label>
+            <p:inputText maxlength="20" id="codcorso" styleClass="w-full mb-3" placeholder="cdl appello" value="#{adminSession.selectedAppello.codcorso}">
+                <f:ajax event="change"/>
+            </p:inputText>
+            <label for="durata" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">Durata</label>
+            <p:inputText  maxlength="20" id="durata" styleClass="w-full mb-3" placeholder="durata(min)" value="#{adminSession.selectedAppello.durata_minuti}">
+                <f:ajax event="change"/>
+            </p:inputText>
+            <label for="tempodomanda" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">Tempo a domanda (in secondi)</label>
+            <p:inputText maxlength="20" id="tempodomanda" styleClass="w-full mb-3" placeholder="tempo(s)" value="#{adminSession.selectedAppello.tempo_domanda_sec}">
+                <f:ajax event="change"/>
+            </p:inputText>
+            <label for="data" class="block text-900 font-medium mb-2" style="font-family: 'Open Sans',serif">Data esame</label>
+            <p:datePicker id="data" value="#{adminSession.selectedAppello.data_ora}" showTime="true" locale="it" pattern="dd.MM.yyyy">
+                <f:ajax event="change"/>
+            </p:datePicker>
+        </h:form>
+        <my:vista_editing_domande domande="#{adminSession.selectedAppello.domande}"/>
+        <br/>
+        <div class="flex flex-row justify-content-end">
+            <p:commandButton update="all_app" icon="pi pi-save" action="#{adminMethods.salva()}" value="Salva">
+            </p:commandButton>
+        </div>
 
+    </p:dialog>
+
+    <my:adminHeader username="#{adminSession.username}" logout="#{adminMethods.logout()}" impostazioni_action="#{adminMethods.opzioniDialog()}"/>
+    <div class="flex flex-column justify-content-around mx-8 py-5" style="max-width: 60rem; min-width: 52rem">
+    <h:form>
             <div class="font-medium text-3xl text-900 fa-border flex-row flex justify-content-between" style="font-family: 'Open Sans',serif">
                 <label class="mx-3">Appelli del sistema</label>
                 <p:commandButton icon="pi pi-plus"  value="New" styleClass="rounded-button" action="#{adminMethods.addAppello()}"/>
             </div>
-            <p:dataList id="all_appelli" value="#{adminSession.allAppellos}" var="appello" type="definition">
+    </h:form>
+            <p:dataList id="all_app" value="#{adminSession.allAppellos}" var="appello" type="definition">
                 <div class="py-2">
                     <my:adminAppello action_results="#{adminMethods.risultati(appello)}" data="#{clientMethods.formatDate(appello.data_ora)}" cdl="#{appello.codcorso}" action_modify="#{adminMethods.modify(appello)}" action_info="#{adminMethods.info(appello)}" action_remove="#{adminMethods.deleteDialog(appello)}" nome="#{appello.nome}"/>
                 </div>
             </p:dataList>
         </div>
-    </h:form>
+
 </f:view>
 </html>
