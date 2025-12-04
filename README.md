@@ -76,5 +76,3 @@ EsamiOnLineClient/
 ---
 
 ## License
-
-Add license information here or reference a `LICENSE` file.
